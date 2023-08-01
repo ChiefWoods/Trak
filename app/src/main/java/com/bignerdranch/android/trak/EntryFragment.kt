@@ -1,4 +1,4 @@
-package com.bignerdranch.android.criminalintent
+package com.bignerdranch.android.trak
 
 import android.Manifest
 import android.app.Activity
@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
 import android.util.Log
-import android.util.Log.d
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -22,19 +21,17 @@ import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import java.net.URI
 import java.util.*
-import java.util.logging.Logger
 
-private const val ARG_CRIME_ID = "crime_id"
+private const val ARG_ENTRY_ID = "entry_id"
 private const val DIALOG_DATE = "DialogDate"
 private const val REQUEST_DATE = 0
 private const val REQUEST_CONTACT = 1
 private const val REQUEST_PHONE = 2
 private const val DATE_FORMAT = "EEE, MM, dd"
 
-class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
-    private lateinit var crime: Crime
+class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
+    private lateinit var entry: Entry
     private lateinit var titleField: EditText
     private lateinit var dateButton: Button
     private lateinit var solvedCheckBox: CheckBox
@@ -42,16 +39,16 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     private lateinit var suspectButton: Button
     private lateinit var callButton: Button
 
-    private val crimeDetailViewModel: CrimeDetailViewModel by lazy {
-        ViewModelProviders.of(this).get(CrimeDetailViewModel::class.java)
+    private val entryDetailViewModel: EntryDetailViewModel by lazy {
+        ViewModelProviders.of(this).get(EntryDetailViewModel::class.java)
     }
 
     companion object {
-        fun newInstance(crimeId: UUID): CrimeFragment {
+        fun newInstance(entryId: UUID): EntryFragment {
             val args = Bundle().apply {
-                putSerializable(ARG_CRIME_ID, crimeId)
+                putSerializable(ARG_ENTRY_ID, entryId)
             }
-            return CrimeFragment().apply {
+            return EntryFragment().apply {
                 arguments = args
             }
         }
@@ -59,9 +56,9 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        crime = Crime()
-        val crimeId: UUID = arguments?.getSerializable(ARG_CRIME_ID) as UUID
-        crimeDetailViewModel.loadCrime(crimeId)
+        entry = Entry()
+        val entryId: UUID = arguments?.getSerializable(ARG_ENTRY_ID) as UUID
+        entryDetailViewModel.loadEntry(entryId)
     }
 
     override fun onCreateView(
@@ -69,54 +66,54 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_crime, container, false)
-        titleField = view.findViewById(R.id.crime_title) as EditText
-        dateButton = view.findViewById(R.id.crime_date) as Button
-        solvedCheckBox = view.findViewById(R.id.crime_solved) as CheckBox
-        reportButton = view.findViewById(R.id.crime_report) as Button
-        suspectButton = view.findViewById(R.id.crime_suspect) as Button
-        callButton = view.findViewById(R.id.crime_call) as Button
+        val view = inflater.inflate(R.layout.fragment_entry, container, false)
+        titleField = view.findViewById(R.id.entry_title) as EditText
+        dateButton = view.findViewById(R.id.entry_date) as Button
+        solvedCheckBox = view.findViewById(R.id.entry_solved) as CheckBox
+        reportButton = view.findViewById(R.id.entry_report) as Button
+        suspectButton = view.findViewById(R.id.entry_suspect) as Button
+        callButton = view.findViewById(R.id.entry_call) as Button
         return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        crimeDetailViewModel.crimeLiveData.observe(
+        entryDetailViewModel.entryLiveData.observe(
             viewLifecycleOwner
-        ) { crime ->
-            crime?.let {
-                this.crime = crime
+        ) { entry ->
+            entry?.let {
+                this.entry = entry
                 updateUI()
             }
         }
     }
 
     private fun updateUI() {
-        titleField.setText(crime.title)
-        dateButton.text = crime.date.toString()
+        titleField.setText(entry.title)
+        dateButton.text = entry.date.toString()
         solvedCheckBox.apply {
-            isChecked = crime.isSolved
+            isChecked = entry.isSolved
             jumpDrawablesToCurrentState()
         }
 
-        if (crime.suspect.isNotEmpty()) {
-            suspectButton.text = crime.suspect
+        if (entry.suspect.isNotEmpty()) {
+            suspectButton.text = entry.suspect
         }
     }
 
-    private fun getCrimeReport(): String {
-        val solvedString = if (crime.isSolved) {
-            getString(R.string.crime_report_solved)
+    private fun getEntryReport(): String {
+        val solvedString = if (entry.isSolved) {
+            getString(R.string.entry_report_solved)
         } else {
-            getString(R.string.crime_report_unsolved)
+            getString(R.string.entry_report_unsolved)
         }
-        val dateString = DateFormat.format(DATE_FORMAT, crime.date).toString()
-        val suspect = if (crime.suspect.isBlank()) {
-            getString(R.string.crime_report_no_suspect)
+        val dateString = DateFormat.format(DATE_FORMAT, entry.date).toString()
+        val suspect = if (entry.suspect.isBlank()) {
+            getString(R.string.entry_report_no_suspect)
         } else {
-            getString(R.string.crime_report_suspect, crime.suspect)
+            getString(R.string.entry_report_suspect, entry.suspect)
         }
-        return getString(R.string.crime_report, crime.title, dateString, solvedString, suspect)
+        return getString(R.string.entry_report, entry.title, dateString, solvedString, suspect)
     }
 
     override fun onStart() {
@@ -132,7 +129,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                 before: Int,
                 count: Int
             ) {
-                crime.title = sequence.toString()
+                entry.title = sequence.toString()
             }
 
             override fun afterTextChanged(s: Editable?) {
@@ -143,20 +140,20 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
         titleField.addTextChangedListener(titleWatcher)
 
         solvedCheckBox.apply {
-            setOnCheckedChangeListener { _, isChecked -> crime.isSolved = isChecked }
+            setOnCheckedChangeListener { _, isChecked -> entry.isSolved = isChecked }
         }
 
         dateButton.setOnClickListener {
-            DatePickerFragment.newInstance(crime.date).apply {
-                setTargetFragment(this@CrimeFragment, REQUEST_DATE)
-                show(this@CrimeFragment.requireFragmentManager(), DIALOG_DATE)
+            DatePickerFragment.newInstance(entry.date).apply {
+                setTargetFragment(this@EntryFragment, REQUEST_DATE)
+                show(this@EntryFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
         reportButton.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
-                putExtra(Intent.EXTRA_TEXT, getCrimeReport())
-                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.crime_report_subject))
+                putExtra(Intent.EXTRA_TEXT, getEntryReport())
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.entry_report_subject))
             }.also { intent ->
                 val chooserIntent = Intent.createChooser(intent, getString(R.string.send_report))
                 startActivity(chooserIntent)
@@ -234,7 +231,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     // At the same time, respect the user's decision. Don't link to
                     // system settings in an effort to convince the user to change
                     // their decision.
-                    Log.e("CrimeFragment", "Unavailable permissions CONTACTS")
+                    Log.e("EntryFragment", "Unavailable permissions CONTACTS")
                 }
                 return
             }
@@ -245,7 +242,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 
     override fun onStop() {
         super.onStop()
-        crimeDetailViewModel.saveCrime(crime)
+        entryDetailViewModel.saveEntry(entry)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -268,8 +265,8 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
                     // that is your suspect's name
                     it.moveToFirst()
                     val suspect = it.getString(0)
-                    crime.suspect = suspect
-                    crimeDetailViewModel.saveCrime(crime)
+                    entry.suspect = suspect
+                    entryDetailViewModel.saveEntry(entry)
                     suspectButton.text = suspect
                 }
             }
@@ -302,7 +299,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
 
                     val phone = it.getString(phoneIndex)
 
-                    Log.d("CrimePhone", phone)
+                    Log.d("EntryPhone", phone)
                     val number: Uri = Uri.parse("tel:$phone")
 
                     startActivity(Intent(Intent.ACTION_DIAL, number))
@@ -315,7 +312,7 @@ class CrimeFragment : Fragment(), DatePickerFragment.Callbacks {
     }
 
     override fun onDateSelected(date: Date) {
-        crime.date = date
+        entry.date = date
         updateUI()
     }
 }

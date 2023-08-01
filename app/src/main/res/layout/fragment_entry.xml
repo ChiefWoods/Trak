@@ -10,48 +10,48 @@
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_title_label" />
+        android:text="@string/entry_title_label" />
 
     <EditText
-        android:id="@+id/crime_title"
+        android:id="@+id/entry_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/crime_title_hint" />
+        android:hint="@string/entry_title_hint" />
 
     <TextView
         style="?android:listSeparatorTextViewStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_details_label" />
+        android:text="@string/entry_details_label" />
 
     <Button
-        android:id="@+id/crime_date"
+        android:id="@+id/entry_date"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         tools:text="Wed Nov 14 11:56 EST 2018" />
 
     <CheckBox
-        android:id="@+id/crime_solved"
+        android:id="@+id/entry_solved"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_solved_label" />
+        android:text="@string/entry_solved_label" />
 
     <Button
-        android:id="@+id/crime_suspect"
+        android:id="@+id/entry_suspect"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_suspect_text" />
+        android:text="@string/entry_suspect_text" />
 
     <Button
-        android:id="@+id/crime_report"
+        android:id="@+id/entry_report"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_report_text" />
+        android:text="@string/entry_report_text" />
 
     <Button
-        android:id="@+id/crime_call"
+        android:id="@+id/entry_call"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/crime_call" />
+        android:text="@string/entry_call" />
 
 </LinearLayout>
