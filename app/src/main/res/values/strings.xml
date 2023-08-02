@@ -3,7 +3,7 @@
     <string name="progress_title_label">Title</string>
     <string name="progress_title_hint">Enter a title for your progress</string>
     <string name="rest_day_label">Rested Yesterday</string>
-    <string name="weight_label">Weight</string>
+    <string name="weight_label">Weight (kg)</string>
     <string name="weight_hint">Enter your weight</string>
     <string name="worked_out_at_label">Worked Out At</string>
     <string name="worked_out_at_hint">Enter gym name</string>
@@ -17,14 +17,11 @@
     <string name="save_entry_text">Save</string>
     <string name="add_entry">Add Entry</string>
     <string name="clear_all">Clear All</string>
-    <string name="progress_report">%1$s!
-        The entry was discovered on %2$s. %3$s, and %4$s
-    </string>
-    <string name="entry_report_solved">The case is solved</string>
-    <string name="entry_report_unsolved">The case is not solved</string>
-    <string name="entry_report_no_suspect">there is no suspect.</string>
-    <string name="entry_report_suspect">the suspect is %s.</string>
-    <string name="entry_report_subject">CriminalIntent Entry Report</string>
-    <string name="send_report">Send entry report via</string>
-    <string name="call_text">Call Trainer</string>
+    <string name="progress_report">Weight Progress Report of %1$s:\n------\nEntry date: %2$s\nEntry time: %3$s\nCurrently weighs at %4$.2fkg. Last worked out at %5$s. %6$s %7$s</string>
+    <string name="progress_report_rested">Rested yesterday.</string>
+    <string name="progress_report_unrested">Did not rest yesterday.</string>
+    <string name="progress_report_no_trainer">Was not trained by anyone.</string>
+    <string name="progress_report_trainer">Trained by %s.</string>
+    <string name="progress_report_subject">EntryIntent Report</string>
+    <string name="send_report">Send progress report via</string>
 </resources>

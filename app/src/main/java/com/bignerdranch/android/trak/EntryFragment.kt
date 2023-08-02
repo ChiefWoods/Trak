@@ -21,23 +21,34 @@ import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
-import java.util.*
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.UUID
 
 private const val ARG_ENTRY_ID = "entry_id"
 private const val DIALOG_DATE = "DialogDate"
+private const val DIALOG_TIME = "DialogTime"
 private const val REQUEST_DATE = 0
 private const val REQUEST_CONTACT = 1
 private const val REQUEST_PHONE = 2
+private const val REQUEST_TIME = 3
+private const val REQUEST_PHOTO = 4
 private const val DATE_FORMAT = "EEE, MM, dd"
+private const val TIME_FORMAT = "HH : mm : ss"
 
-class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
+class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragment.Callbacks {
     private lateinit var entry: Entry
     private lateinit var titleField: EditText
+    private lateinit var restedCheckBox: CheckBox
+    private lateinit var weightField: EditText
+    private lateinit var gymField: EditText
     private lateinit var dateButton: Button
-    private lateinit var solvedCheckBox: CheckBox
-    private lateinit var reportButton: Button
-    private lateinit var suspectButton: Button
-    private lateinit var callButton: Button
+    private lateinit var timeButton: Button
+    private lateinit var chooseTrainerButton: Button
+    private lateinit var callTrainerButton: Button
+    private lateinit var shareButton: Button
+    private lateinit var deleteButton: Button
+    private lateinit var saveButton: Button
 
     private val entryDetailViewModel: EntryDetailViewModel by lazy {
         ViewModelProviders.of(this).get(EntryDetailViewModel::class.java)
@@ -67,12 +78,17 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.fragment_entry, container, false)
-        titleField = view.findViewById(R.id.entry_title) as EditText
+        titleField = view.findViewById(R.id.progress_title) as EditText
+        restedCheckBox = view.findViewById(R.id.rested_yesterday) as CheckBox
+        weightField = view.findViewById(R.id.progress_weight) as EditText
+        gymField = view.findViewById(R.id.gym_name) as EditText
         dateButton = view.findViewById(R.id.entry_date) as Button
-        solvedCheckBox = view.findViewById(R.id.entry_solved) as CheckBox
-        reportButton = view.findViewById(R.id.entry_report) as Button
-        suspectButton = view.findViewById(R.id.entry_suspect) as Button
-        callButton = view.findViewById(R.id.entry_call) as Button
+        timeButton = view.findViewById(R.id.entry_time) as Button
+        chooseTrainerButton = view.findViewById(R.id.choose_trainer) as Button
+        callTrainerButton = view.findViewById(R.id.call_trainer) as Button
+        shareButton = view.findViewById(R.id.share_progress) as Button
+        deleteButton = view.findViewById(R.id.delete_entry) as Button
+        saveButton = view.findViewById(R.id.save_entry) as Button
         return view
     }
 
@@ -90,30 +106,43 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
 
     private fun updateUI() {
         titleField.setText(entry.title)
-        dateButton.text = entry.date.toString()
-        solvedCheckBox.apply {
-            isChecked = entry.isSolved
+        weightField.setText((entry.weight.toString()))
+        gymField.setText(entry.gym)
+        dateButton.text = SimpleDateFormat("dd-MMM-yyyy").format(entry.date)
+        timeButton.text = SimpleDateFormat("HH:mm").format(entry.time)
+        restedCheckBox.apply {
+            isChecked = entry.rested
             jumpDrawablesToCurrentState()
         }
 
-        if (entry.suspect.isNotEmpty()) {
-            suspectButton.text = entry.suspect
+        if (entry.trainer.isNotEmpty()) {
+            chooseTrainerButton.text = entry.trainer
         }
     }
 
     private fun getEntryReport(): String {
-        val solvedString = if (entry.isSolved) {
-            getString(R.string.entry_report_solved)
+        val restedString = if (entry.rested) {
+            getString(R.string.progress_report_rested)
         } else {
-            getString(R.string.entry_report_unsolved)
+            getString(R.string.progress_report_unrested)
         }
         val dateString = DateFormat.format(DATE_FORMAT, entry.date).toString()
-        val suspect = if (entry.suspect.isBlank()) {
-            getString(R.string.entry_report_no_suspect)
+        val timeString = DateFormat.format(TIME_FORMAT, entry.time).toString()
+        val trainer = if (entry.trainer.isBlank()) {
+            getString(R.string.progress_report_no_trainer)
         } else {
-            getString(R.string.entry_report_suspect, entry.suspect)
+            getString(R.string.progress_report_trainer, entry.trainer)
         }
-        return getString(R.string.entry_report, entry.title, dateString, solvedString, suspect)
+        return getString(
+            R.string.progress_report,
+            entry.title,
+            dateString,
+            timeString,
+            entry.weight,
+            entry.gym,
+            restedString,
+            trainer
+        )
     }
 
     override fun onStart() {
@@ -137,11 +166,57 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
             }
         }
 
+        val weightWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // This space intentionally left blank
+            }
+
+            override fun onTextChanged(
+                sequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                try {
+                    entry.weight = sequence.toString().toDouble()
+                } catch (e: NumberFormatException) {
+                    entry.weight = 0.0
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // This space intentionally left blank
+            }
+        }
+
+        val gymWatcher = object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                // This space intentionally left blank
+            }
+
+            override fun onTextChanged(
+                sequence: CharSequence?,
+                start: Int,
+                before: Int,
+                count: Int
+            ) {
+                entry.gym = sequence.toString()
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                // This space intentionally left blank
+            }
+        }
+
         titleField.addTextChangedListener(titleWatcher)
 
-        solvedCheckBox.apply {
-            setOnCheckedChangeListener { _, isChecked -> entry.isSolved = isChecked }
+        restedCheckBox.apply {
+            setOnCheckedChangeListener { _, isChecked -> entry.rested = isChecked }
         }
+
+        weightField.addTextChangedListener(weightWatcher)
+
+        gymField.addTextChangedListener(gymWatcher)
 
         dateButton.setOnClickListener {
             DatePickerFragment.newInstance(entry.date).apply {
@@ -149,18 +224,26 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                 show(this@EntryFragment.requireFragmentManager(), DIALOG_DATE)
             }
         }
-        reportButton.setOnClickListener {
+
+        timeButton.setOnClickListener {
+            TimePickerFragment.newInstance(entry.time).apply {
+                setTargetFragment(this@EntryFragment, REQUEST_TIME)
+                show(this@EntryFragment.requireFragmentManager(), DIALOG_TIME)
+            }
+        }
+
+        shareButton.setOnClickListener {
             Intent(Intent.ACTION_SEND).apply {
                 type = "text/plain"
                 putExtra(Intent.EXTRA_TEXT, getEntryReport())
-                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.entry_report_subject))
+                putExtra(Intent.EXTRA_SUBJECT, getString(R.string.progress_report_subject))
             }.also { intent ->
                 val chooserIntent = Intent.createChooser(intent, getString(R.string.send_report))
                 startActivity(chooserIntent)
             }
         }
 
-        suspectButton.apply {
+        chooseTrainerButton.apply {
             val pickContactIntent =
                 Intent(Intent.ACTION_PICK, ContactsContract.Contacts.CONTENT_URI)
             setOnClickListener {
@@ -177,8 +260,7 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
             }
         }
 
-        callButton.apply {
-
+        callTrainerButton.apply {
             when (PackageManager.PERMISSION_GRANTED) {
                 ContextCompat.checkSelfPermission(
                     context,
@@ -193,6 +275,7 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                         startActivityForResult(pickPhoneIntent, REQUEST_PHONE)
                     }
                 }
+
                 else -> {
                     // You can directly ask for the permission.
                     requestPermissions(
@@ -202,7 +285,6 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                 }
             }
         }
-
     }
 
     override fun onRequestPermissionsResult(
@@ -224,7 +306,6 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                             type = ContactsContract.CommonDataKinds.Phone.CONTENT_TYPE
                         }
                     startActivityForResult(pickPhoneIntent, REQUEST_PHONE)
-
                 } else {
                     // Explain to the user that the feature is unavailable because
                     // the features requires a permission that the user has denied.
@@ -235,6 +316,7 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                 }
                 return
             }
+
             else -> {
             }
         }
@@ -264,12 +346,13 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                     // Pull out the first column of the first row of data -
                     // that is your suspect's name
                     it.moveToFirst()
-                    val suspect = it.getString(0)
-                    entry.suspect = suspect
+                    val trainer = it.getString(0)
+                    entry.trainer = trainer
                     entryDetailViewModel.saveEntry(entry)
-                    suspectButton.text = suspect
+                    chooseTrainerButton.text = trainer
                 }
             }
+
             requestCode == REQUEST_PHONE && data != null -> {
                 Log.i("Request Phone", "URI: ${data.data}")
 
@@ -303,16 +386,18 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks {
                     val number: Uri = Uri.parse("tel:$phone")
 
                     startActivity(Intent(Intent.ACTION_DIAL, number))
-
                 }
-
-
             }
         }
     }
 
     override fun onDateSelected(date: Date) {
         entry.date = date
+        updateUI()
+    }
+
+    override fun onTimeSelected(time: Date) {
+        entry.time = time
         updateUI()
     }
 }

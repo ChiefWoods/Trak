@@ -78,7 +78,7 @@ class EntryListFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         return when (item.itemId) {
-            R.id.new_entry -> {
+            R.id.add_entry -> {
                 val entry = Entry()
                 entryListViewModel.addEntry(entry)
                 callbacks?.onEntrySelected(entry.id)
@@ -101,10 +101,12 @@ class EntryListFragment : Fragment() {
 
     private inner class EntryHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
-        private val titleTextView: TextView = itemView.findViewById(R.id.entry_title) as TextView
+        private val titleTextView: TextView = itemView.findViewById(R.id.progress_title) as TextView
+        private val weightTextView: TextView = itemView.findViewById(R.id.progress_weight) as TextView
         private val dateTextView: TextView = itemView.findViewById(R.id.entry_date) as TextView
-        private val solvedImageView: ImageView =
-            itemView.findViewById(R.id.entry_solved) as ImageView
+        private val timeTextView: TextView = itemView.findViewById(R.id.entry_time) as TextView
+        private val restedImageView: ImageView =
+            itemView.findViewById(R.id.entry_rested) as ImageView
         private lateinit var entry: Entry
 
         init {
@@ -114,8 +116,10 @@ class EntryListFragment : Fragment() {
         fun bind(entry: Entry) {
             this.entry = entry
             titleTextView.text = entry.title
+            weightTextView.text = entry.weight.toString() + "kg"
             dateTextView.text = entry.date.toString()
-            solvedImageView.visibility = if (entry.isSolved) {
+            timeTextView.text = entry.time.toString()
+            restedImageView.visibility = if (entry.rested) {
                 View.VISIBLE
             } else {
                 View.GONE
@@ -130,8 +134,6 @@ class EntryListFragment : Fragment() {
         override fun onClick(v: View?) {
             callbacks?.onEntrySelected(entry.id)
         }
-
-
     }
 
     private inner class EntryAdapter(var entries: List<Entry>) :
@@ -148,6 +150,5 @@ class EntryListFragment : Fragment() {
         }
 
         override fun getItemCount(): Int = entries.size
-
     }
 }

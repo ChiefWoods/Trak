@@ -11,7 +11,7 @@ import java.util.GregorianCalendar
 
 private const val ARG_TIME = "time"
 
-class TimePickerFragment: DialogFragment() {
+class TimePickerFragment : DialogFragment() {
     companion object {
         fun newInstance(time: Date): TimePickerFragment {
             val args = Bundle().apply {
@@ -53,7 +53,7 @@ class TimePickerFragment: DialogFragment() {
             timeListener,
             initialHourOfDay,
             initialMinute,
-            false
+            true
         )
     }
 }

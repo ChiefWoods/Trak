@@ -50,5 +50,4 @@ class EntryRepository private constructor(context: Context) {
             return INSTANCE ?: throw IllegalStateException("EntryRepository must be initialized")
         }
     }
-
 }
