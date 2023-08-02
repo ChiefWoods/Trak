@@ -5,7 +5,8 @@
     <string name="entry_details_label">Details</string>
     <string name="entry_solved_label">Solved</string>
     <string name="entry_edit_time_label">Edit time</string>
-    <string name="new_entry">New entry</string>
+    <string name="new_entry">Add Entry</string>
+    <string name="clear_all">Clear All</string>
     <string name="entry_suspect_text">Choose suspect</string>
     <string name="entry_report_text">Send entry report</string>
     <string name="entry_report">%1$s!
