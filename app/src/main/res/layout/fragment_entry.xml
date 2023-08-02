@@ -1,57 +1,194 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="16dp"
-    android:orientation="vertical">
+    android:layout_centerHorizontal="true">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_title_label" />
+        android:layout_height="match_parent"
+        android:layout_margin="16dp"
+        android:orientation="vertical">
 
-    <EditText
-        android:id="@+id/entry_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="@string/entry_title_hint" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:orientation="horizontal">
 
-    <TextView
-        style="?android:listSeparatorTextViewStyle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_details_label" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:orientation="vertical">
 
-    <Button
-        android:id="@+id/entry_date"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        tools:text="Wed Nov 14 11:56 EST 2018" />
+                <ImageView
+                    android:id="@+id/progress_photo"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:background="@android:color/darker_gray"
+                    android:cropToPadding="true"
+                    android:scaleType="centerInside" />
 
-    <CheckBox
-        android:id="@+id/entry_solved"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_solved_label" />
+                <ImageButton
+                    android:id="@+id/progress_camera"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:src="@android:drawable/ic_menu_camera" />
 
-    <Button
-        android:id="@+id/entry_suspect"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_suspect_text" />
+            </LinearLayout>
 
-    <Button
-        android:id="@+id/entry_report"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_report_text" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="4dp"
+                android:orientation="vertical">
 
-    <Button
-        android:id="@+id/entry_call"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/entry_call" />
+                <TextView
+                    style="?android:listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/progress_title_label" />
 
-</LinearLayout>
+                <EditText
+                    android:id="@+id/progress_title"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/progress_title_hint"
+                    android:inputType="text" />
+
+                <CheckBox
+                    android:id="@+id/rested_yesterday"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/rest_day_label" />
+
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_label" />
+
+        <EditText
+            android:id="@+id/progress_weight"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ems="10"
+            android:hint="@string/weight_hint"
+            android:inputType="numberDecimal" />
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/worked_out_at_label" />
+
+        <EditText
+            android:id="@+id/worked_out_at"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/worked_out_at_hint"
+            android:inputType="text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="28dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="?android:listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/date_label" />
+
+                <Button
+                    android:id="@+id/progress_date"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Choose Date" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="28dp"
+                android:layout_weight="1"
+                android:orientation="vertical">
+
+                <TextView
+                    style="?android:listSeparatorTextViewStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/time_label" />
+
+                <Button
+                    android:id="@+id/progress_time"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    tools:text="Pick Time" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            style="?android:listSeparatorTextViewStyle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/trainer_label" />
+
+        <Button
+            android:id="@+id/choose_trainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/choose_trainer_text" />
+
+        <Button
+            android:id="@+id/call_trainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/call_trainer_text" />
+
+        <Button
+            android:id="@+id/share_progress"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/share_progress_text" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_marginTop="48dp">
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/delete_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="28dp"
+                android:layout_weight="1"
+                android:background="@android:color/holo_red_light"
+                android:text="@string/delete_entry_text" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/save_entry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="28dp"
+                android:layout_weight="1"
+                android:background="#55DA46"
+                android:text="@string/save_entry_text" />
+        </LinearLayout>
+
+    </LinearLayout>
+</ScrollView>

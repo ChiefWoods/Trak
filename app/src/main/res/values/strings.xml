@@ -1,15 +1,23 @@
 <resources>
     <string name="app_name">Trak</string>
-    <string name="entry_title_hint">Enter a title for the entry.</string>
-    <string name="entry_title_label">Title</string>
-    <string name="entry_details_label">Details</string>
-    <string name="entry_solved_label">Solved</string>
-    <string name="entry_edit_time_label">Edit time</string>
-    <string name="new_entry">Add Entry</string>
+    <string name="progress_title_label">Title</string>
+    <string name="progress_title_hint">Enter a title for your progress</string>
+    <string name="rest_day_label">Rested Yesterday</string>
+    <string name="weight_label">Weight</string>
+    <string name="weight_hint">Enter your weight</string>
+    <string name="worked_out_at_label">Worked Out At</string>
+    <string name="worked_out_at_hint">Enter gym name</string>
+    <string name="date_label">Date of Entry</string>
+    <string name="time_label">Time of Entry</string>
+    <string name="trainer_label">Trainer</string>
+    <string name="choose_trainer_text">Choose Trainer</string>
+    <string name="call_trainer_text">Call Trainer</string>
+    <string name="share_progress_text">Share Progress</string>
+    <string name="delete_entry_text">Delete</string>
+    <string name="save_entry_text">Save</string>
+    <string name="add_entry">Add Entry</string>
     <string name="clear_all">Clear All</string>
-    <string name="entry_suspect_text">Choose suspect</string>
-    <string name="entry_report_text">Send entry report</string>
-    <string name="entry_report">%1$s!
+    <string name="progress_report">%1$s!
         The entry was discovered on %2$s. %3$s, and %4$s
     </string>
     <string name="entry_report_solved">The case is solved</string>
@@ -18,5 +26,5 @@
     <string name="entry_report_suspect">the suspect is %s.</string>
     <string name="entry_report_subject">CriminalIntent Entry Report</string>
     <string name="send_report">Send entry report via</string>
-    <string name="entry_call">Call suspect</string>
+    <string name="call_text">Call Trainer</string>
 </resources>
