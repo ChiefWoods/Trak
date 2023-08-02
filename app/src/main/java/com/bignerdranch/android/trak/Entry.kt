@@ -8,7 +8,10 @@ import java.util.*
 data class Entry(
     @PrimaryKey var id: UUID = UUID.randomUUID(),
     var title: String = "",
+    var rested: Boolean = false,
+    var weight: Double = 0.0,
+    var gym: String = "",
     var date: Date = Date(),
-    var isSolved: Boolean = false,
-    var suspect: String = ""
+    var time: Date = Date(),
+    var trainer: String = ""
 )
