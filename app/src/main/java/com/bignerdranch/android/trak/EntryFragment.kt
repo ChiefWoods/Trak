@@ -6,7 +6,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
 import android.graphics.Bitmap
-import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -126,6 +125,10 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
 
         if (entry.trainer.isNotEmpty()) {
             chooseTrainerButton.text = entry.trainer
+        }
+
+        if (entry.photo != null) {
+            progressPhoto.setImageBitmap(entry.photo)
         }
     }
 
@@ -432,9 +435,10 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
             requestCode == REQUEST_PHOTO && data != null -> {
                 val imageBitmap = data?.extras?.get("data") as Bitmap?
                 if (imageBitmap != null) {
-                    Log.e("tag", "test message success")
                     val imageBitmap = data.extras?.get("data") as Bitmap
                     progressPhoto.setImageBitmap(imageBitmap)
+                    entry.photo = imageBitmap
+                    entryDetailViewModel.saveEntry(entry)
                 }
             }
         }
