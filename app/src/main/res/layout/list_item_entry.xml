@@ -61,7 +61,7 @@
                 android:id="@+id/entry_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
+                android:layout_marginStart="24dp"
                 android:layout_weight="1"
                 android:text="Entry Time" />
         </LinearLayout>

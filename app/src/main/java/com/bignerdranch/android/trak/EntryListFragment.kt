@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import java.text.SimpleDateFormat
 import java.util.*
 
 private const val TAG = "EntryListFragment"
@@ -115,10 +116,14 @@ class EntryListFragment : Fragment() {
 
         fun bind(entry: Entry) {
             this.entry = entry
-            titleTextView.text = entry.title
+            if (entry.title != "") {
+                titleTextView.text = entry.title
+            } else {
+                titleTextView.text = "No Title"
+            }
             weightTextView.text = entry.weight.toString() + "kg"
-            dateTextView.text = entry.date.toString()
-            timeTextView.text = entry.time.toString()
+            dateTextView.text = SimpleDateFormat("dd-MMM-yyyy").format(entry.date)
+            timeTextView.text = SimpleDateFormat("HH:mm").format(entry.time)
             restedImageView.visibility = if (entry.rested) {
                 View.VISIBLE
             } else {
