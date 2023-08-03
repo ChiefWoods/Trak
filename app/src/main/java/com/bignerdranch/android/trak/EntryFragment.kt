@@ -22,6 +22,7 @@ import android.widget.CheckBox
 import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -58,6 +59,10 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
 
     private val entryDetailViewModel: EntryDetailViewModel by lazy {
         ViewModelProviders.of(this).get(EntryDetailViewModel::class.java)
+    }
+
+    private val entryListViewModel: EntryListViewModel by lazy {
+        ViewModelProviders.of(this).get(EntryListViewModel::class.java)
     }
 
     companion object {
@@ -317,6 +322,24 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
                     )
                 }
             }
+        }
+        saveButton.setOnClickListener {
+            Toast.makeText(
+                requireActivity(),
+                "Entry saved!",
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
+        }
+
+        deleteButton.setOnClickListener {
+            entryListViewModel.deleteEntry(entry)
+            Toast.makeText(
+                requireActivity(),
+                "Entry deleted!",
+                Toast.LENGTH_SHORT
+            ).show()
+            activity?.onBackPressed()
         }
     }
 

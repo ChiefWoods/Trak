@@ -6,6 +6,7 @@ import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -97,6 +98,11 @@ class EntryListFragment : Fragment() {
                             }
                             isIterationCompleted = true
                             entryListViewModel.entryListLiveData.removeObserver(this)
+                            Toast.makeText(
+                                activity,
+                                "All entries deleted!",
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                     }
                 }
