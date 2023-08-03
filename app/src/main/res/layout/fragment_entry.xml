@@ -29,7 +29,8 @@
                     android:layout_height="100dp"
                     android:background="@android:color/darker_gray"
                     android:cropToPadding="true"
-                    android:scaleType="centerInside" />
+                    android:scaleType="centerInside"
+                    android:visibility="visible"/>
 
                 <ImageButton
                     android:id="@+id/progress_camera"

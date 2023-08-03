@@ -5,9 +5,12 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.content.pm.ResolveInfo
+import android.graphics.Bitmap
+import android.media.Image
 import android.net.Uri
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.text.format.DateFormat
@@ -18,6 +21,8 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.CheckBox
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -40,6 +45,8 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
     private lateinit var entry: Entry
     private lateinit var titleField: EditText
     private lateinit var restedCheckBox: CheckBox
+    private lateinit var progressPhoto: ImageView
+    private lateinit var cameraButton: ImageButton
     private lateinit var weightField: EditText
     private lateinit var gymField: EditText
     private lateinit var dateButton: Button
@@ -80,6 +87,8 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
         val view = inflater.inflate(R.layout.fragment_entry, container, false)
         titleField = view.findViewById(R.id.progress_title) as EditText
         restedCheckBox = view.findViewById(R.id.rested_yesterday) as CheckBox
+        progressPhoto = view.findViewById(R.id.progress_photo) as ImageView
+        cameraButton = view.findViewById(R.id.progress_camera) as ImageButton
         weightField = view.findViewById(R.id.progress_weight) as EditText
         gymField = view.findViewById(R.id.gym_name) as EditText
         dateButton = view.findViewById(R.id.entry_date) as Button
@@ -214,6 +223,27 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
             setOnCheckedChangeListener { _, isChecked -> entry.rested = isChecked }
         }
 
+        cameraButton.apply {
+            when (PackageManager.PERMISSION_GRANTED) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.CAMERA
+                ) -> {
+                    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    setOnClickListener {
+                        startActivityForResult(takePictureIntent, REQUEST_PHOTO)
+                    }
+                }
+
+                else -> {
+                    requestPermissions(
+                        arrayOf(Manifest.permission.CAMERA),
+                        REQUEST_PHOTO
+                    )
+                }
+            }
+        }
+
         weightField.addTextChangedListener(weightWatcher)
 
         gymField.addTextChangedListener(gymWatcher)
@@ -317,6 +347,16 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
                 return
             }
 
+            REQUEST_PHOTO -> {
+                if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                    val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+                    startActivityForResult(takePictureIntent, REQUEST_PHOTO)
+                } else {
+                    Log.e("EntryFragment", "Unavailable permissions CAMERA")
+                }
+            }
+
+
             else -> {
             }
         }
@@ -386,6 +426,15 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
                     val number: Uri = Uri.parse("tel:$phone")
 
                     startActivity(Intent(Intent.ACTION_DIAL, number))
+                }
+            }
+
+            requestCode == REQUEST_PHOTO && data != null -> {
+                val imageBitmap = data?.extras?.get("data") as Bitmap?
+                if (imageBitmap != null) {
+                    Log.e("tag", "test message success")
+                    val imageBitmap = data.extras?.get("data") as Bitmap
+                    progressPhoto.setImageBitmap(imageBitmap)
                 }
             }
         }

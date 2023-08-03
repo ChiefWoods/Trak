@@ -13,5 +13,5 @@ data class Entry(
     var gym: String = "",
     var date: Date = Date(),
     var time: Date = Date(),
-    var trainer: String = ""
+    var trainer: String = "",
 )
