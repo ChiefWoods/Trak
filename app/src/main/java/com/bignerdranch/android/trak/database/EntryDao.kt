@@ -2,6 +2,7 @@ package com.bignerdranch.android.trak.database
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Update
@@ -21,4 +22,7 @@ interface EntryDao {
 
     @Insert
     fun addEntry(entry: Entry)
+
+    @Delete
+    fun deleteEntry(entry: Entry)
 }

@@ -284,7 +284,7 @@ class EntryFragment : Fragment(), DatePickerFragment.Callbacks, TimePickerFragme
             val resolvedActivity: ResolveInfo? =
                 packageManager.resolveActivity(pickContactIntent, PackageManager.MATCH_DEFAULT_ONLY)
 
-            Log.d("SuspectButton", resolvedActivity.toString())
+            Log.d("TrainerButton", resolvedActivity.toString())
             if (resolvedActivity == null) {
                 isEnabled = false
             }

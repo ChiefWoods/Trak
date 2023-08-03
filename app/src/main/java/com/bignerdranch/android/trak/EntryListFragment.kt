@@ -11,6 +11,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.bignerdranch.android.trak.database.EntryDao
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -85,6 +86,26 @@ class EntryListFragment : Fragment() {
                 callbacks?.onEntrySelected(entry.id)
                 true
             }
+
+            R.id.clear_entries -> {
+                var isIterationCompleted = false
+
+                val observer = object : Observer<List<Entry>> {
+                    override fun onChanged(entryList: List<Entry>?) {
+                        if (!isIterationCompleted) {
+                            entryList?.forEach { entry ->
+                                entryListViewModel.deleteEntry(entry)
+                            }
+                            isIterationCompleted = true
+                            entryListViewModel.entryListLiveData.removeObserver(this)
+                        }
+                    }
+                }
+
+                entryListViewModel.entryListLiveData.observe(this, observer)
+                true
+            }
+
             else -> return super.onOptionsItemSelected(item)
         }
     }
@@ -103,7 +124,8 @@ class EntryListFragment : Fragment() {
     private inner class EntryHolder(view: View) : RecyclerView.ViewHolder(view),
         View.OnClickListener {
         private val titleTextView: TextView = itemView.findViewById(R.id.progress_title) as TextView
-        private val weightTextView: TextView = itemView.findViewById(R.id.progress_weight) as TextView
+        private val weightTextView: TextView =
+            itemView.findViewById(R.id.progress_weight) as TextView
         private val dateTextView: TextView = itemView.findViewById(R.id.entry_date) as TextView
         private val timeTextView: TextView = itemView.findViewById(R.id.entry_time) as TextView
         private val restedImageView: ImageView =

@@ -9,4 +9,8 @@ class EntryListViewModel : ViewModel() {
     fun addEntry(entry: Entry) {
         entryRepository.addEntry(entry)
     }
+
+    fun deleteEntry(entry: Entry) {
+        entryRepository.deleteEntry(entry)
+    }
 }

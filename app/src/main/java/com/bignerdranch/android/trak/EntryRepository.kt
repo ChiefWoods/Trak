@@ -38,6 +38,12 @@ class EntryRepository private constructor(context: Context) {
         }
     }
 
+    fun deleteEntry(entry: Entry) {
+        executor.execute {
+            entryDao.deleteEntry(entry)
+        }
+    }
+
     companion object {
         private var INSTANCE: EntryRepository? = null
         fun initialize(context: Context) {
