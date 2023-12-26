@@ -1,6 +1,6 @@
 # Trak
 
-<img src="main_screenshot.jpg" alt="Main screenshot" width="200">
+<img src="screenshot.jpg" alt="Screenshot" width="200">
 
 Progress tracker for CSC2074 Mobile Application Development.
 
@@ -14,15 +14,19 @@ Progress tracker for CSC2074 Mobile Application Development.
 
 ## Built With
 
-### Tools and Languages
+### Languages
 
-- [![Kotlin](https://img.shields.io/badge/Kotlin-%2327282C?style=for-the-badge&logo=kotlin)](https://kotlinlang.org/)
+- [![Kotlin](https://img.shields.io/badge/Kotlin-19191c?style=for-the-badge&logo=kotlin)](https://kotlinlang.org/)
+
+### Tools
+
+- [![Android Studio](https://img.shields.io/badge/Android%20Studio-3c75d3?style=for-the-badge&logo=android-studio)](https://developer.android.com/studio)
 
 ## Getting Started
 
 ### Setup
 
-1. Clone the repository.
+1. Clone the repository
 ```
 git clone https://github.com/ChiefWoods/Trak.git
 ```
